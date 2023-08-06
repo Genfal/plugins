@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import api.Plugin;
 import api.Service;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,9 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
@@ -30,7 +33,7 @@ public class PluginReloader {
 
     @SneakyThrows
     private void loadPlugins() {
-        List<Service> plugins = new ArrayList<>();
+        Map<String, Service> plugins = new HashMap<>();
         File dir = new File(PATH);
         if (!dir.exists()) {
             Files.createDirectory(Path.of(PATH));
@@ -52,7 +55,7 @@ public class PluginReloader {
                         if (clazz.equals(Service.class)) {
                             var constructors = c.getConstructors();
                             var Service = (Service) constructors[0].newInstance();
-                            plugins.add(Service);
+                            plugins.put(c.getAnnotation(Plugin.class).value(), Service);
                             break;
                         }
                     }

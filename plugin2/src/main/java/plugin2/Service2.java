@@ -1,9 +1,9 @@
 package plugin2;
 
+import api.Plugin;
 import api.Service;
 
-import java.security.Provider;
-
+@Plugin("Correct")
 public class Service2 implements Service {
 
     @Override
